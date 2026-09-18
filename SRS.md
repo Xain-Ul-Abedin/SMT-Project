@@ -16,16 +16,15 @@ The **Arts Gallery Web Application** is a feature-rich, multi-role digital platf
 - **RBAC**: Role-Based Access Control
 - **COD**: Cash on Delivery
 - **JWT**: JSON Web Token
-- **ORM**: Object-Relational Mapping
+- **ODM**: Object Document Mapper (Mongoose)
 - **UI/UX**: User Interface / User Experience
 - **CRUD**: Create, Read, Update, Delete
-- **VU**: Virtual University of Pakistan
 
 ### 1.4 Project Metadata
 - **Project Title**: Arts Gallery Web Application
-- **Project Folder**: `SMT-Project`
-- **Academic Domain**: Web Application Development
-- **Supervisor**: Manahil Hassan (`manahil.hassan@vu.edu.pk`)
+- **Project Folder**: `Brain/Projects/SMT-Project`
+- **Domain**: Web Application Development
+- **Hosting Strategy**: 100% Zero-Cost Cloud Infrastructure (Vercel + Render + MongoDB Atlas)
 - **Orchestration Leads**: Siesta (PM / Coordinator) & Aizen (DevOps & Integration Strategist)
 
 ---
@@ -33,28 +32,28 @@ The **Arts Gallery Web Application** is a feature-rich, multi-role digital platf
 ## 2. Overall Description
 
 ### 2.1 Product Perspective
-The Arts Gallery system operates as an independent, self-contained web platform with optional external integrations for payment gateways, cloud image storage, and social media sharing APIs.
+The Arts Gallery system operates as an independent, self-contained web platform with cloud integrations for MongoDB Atlas, payment gateways, and image storage.
 
 ```mermaid
 flowchart TD
-    Visitor["Visitor (Unauthenticated)"] --> UI["Frontend Web UI"]
+    Visitor["Visitor (Unauthenticated)"] --> UI["Frontend Web UI (Vercel Free Tier)"]
     Customer["Customer (Buyer)"] --> UI
     Artist["Seller / Artist"] --> UI
     Admin["Gallery Admin"] --> UI
     
-    UI --> API["RESTful / GraphQL API Engine"]
+    UI --> API["RESTful API Engine (Render Free Tier)"]
     API --> Auth["Authentication & RBAC Module"]
     API --> Catalog["Artwork & Inventory Module"]
     API --> Order["Order & Payment Processing"]
     API --> Review["Review & Rating Module"]
     
-    API --> DB[(Relational Database)]
-    API --> CloudMedia["Cloud Image Storage (S3 / Cloudinary)"]
-    API --> PaymentGateway["Payment Gateways (Stripe / COD Engine)"]
+    API --> DB[(MongoDB Atlas Free Cluster)]
+    API --> CloudMedia["Cloud Image Storage (Cloudinary / S3 Free Tier)"]
+    API --> PaymentGateway["Payment Gateways (Stripe Test / COD Engine)"]
 ```
 
 ### 2.2 User Classes and Characteristics
-The application supports four distinct user roles, each with specific permissions and workflows:
+The application supports four distinct user roles:
 
 1. **Visitor (Unauthenticated Guest)**:
    - *Characteristics*: Casual user browsing artwork without an account.
@@ -75,7 +74,7 @@ The application supports four distinct user roles, each with specific permission
 
 ### Module 1: User Authentication & Profile Management
 - **FR-1.1 Self-Registration**: System shall allow new Customers and Sellers (Artists) to register by providing name, email, password, and role selection.
-- **FR-1.2 Secure Login**: System shall authenticate users via email/password or JWT tokens, issuing role-based credentials.
+- **FR-1.2 Secure Login**: System shall authenticate users via email/password using JWT tokens with role-based claims.
 - **FR-1.3 Profile Management**: Artists can update bio, profile photo, studio address, and contact details. Customers can manage shipping addresses and password changes.
 - **FR-1.4 User Administration (Admin)**: Admin can view list of registered users, edit account details, assign privileges, and activate or suspend accounts.
 
@@ -93,7 +92,7 @@ The application supports four distinct user roles, each with specific permission
 ### Module 4: E-Commerce, Order & Payment Processing
 - **FR-4.1 Shopping Cart**: Customers can add available artwork to a persistent shopping cart, modify selection, and view price subtotals.
 - **FR-4.2 Checkout Engine**: Checkout process collecting shipping address, delivery preferences, and payment details.
-- **FR-4.3 Payment Gateway Support**: Support for Online Credit/Debit Card payments (Stripe/PayPal API) and Cash on Delivery (COD).
+- **FR-4.3 Payment Gateway Support**: Support for Online Credit/Debit Card payments (Stripe API) and Cash on Delivery (COD).
 - **FR-4.4 Order Tracking & Fulfillment**: Admin and Sellers can update order status through stages (`Pending`, `Payment Verified`, `Processing`, `Shipped`, `Delivered`, `Cancelled`).
 
 ### Module 5: Reviews, Ratings & Reporting Analytics
@@ -105,9 +104,9 @@ The application supports four distinct user roles, each with specific permission
 ## 4. Non-Functional Requirements
 
 ### 4.1 Security & Data Protection
-- **Password Hashing**: Passwords must be hashed using `Bcrypt` or `Argon2` before storage.
+- **Password Hashing**: Passwords must be hashed using `Bcrypt` before storage.
 - **Data Encryption**: HTTPS / SSL encryption for all client-server communications.
-- **Role-Based Access Control (RBAC)**: API endpoints must strictly validate user tokens and permissions to prevent unauthorized access or privilege escalation.
+- **Role-Based Access Control (RBAC)**: API endpoints must strictly validate user tokens and permissions to prevent unauthorized access.
 
 ### 4.2 Performance & Responsiveness
 - **Page Load Time**: Public gallery pages must load within `< 2.0` seconds under standard internet connections.
@@ -118,92 +117,77 @@ The application supports four distinct user roles, each with specific permission
 - **Anti-Slop Aesthetic**: Clean typographic hierarchy, subtle card elevation, warm gallery lighting aesthetic, and accessible color contrast.
 
 ### 4.4 Scalability & Reliability
-- **Database Indexing**: Indexed search fields (`title`, `artist_id`, `category`, `price`, `status`).
-- **Cloud Media Storage**: Artwork images stored in CDN-backed object storage (AWS S3 / Cloudinary) to ensure zero server bloat.
+- **Document Indexing**: Indexed MongoDB collection fields (`title`, `artist_id`, `category`, `price`, `status`).
+- **Cloud Media Storage**: Artwork images stored in CDN-backed object storage (Cloudinary Free Tier) to ensure zero server bloat.
 
 ---
 
-## 5. Technology Stack & Tools Selection
+## 5. Technology Stack & Zero-Cost Infrastructure
 
-To implement the **Arts Gallery Web Application**, two technology stacks are evaluated:
-
-| Technology Layer | Stack Option A (Recommended Modern Stack) | Stack Option B (Classic VU PDF Stack) |
+| Layer | Selected Technology | Zero-Cost Provider / Strategy |
 | :--- | :--- | :--- |
-| **Frontend UI** | React.js / Next.js + Tailwind CSS | HTML5 / Bootstrap 5 / JavaScript |
-| **Backend API** | Node.js (Express / NestJS) or Python (FastAPI/Django) | C# ASP.NET Core 8 Web API |
-| **Database** | PostgreSQL + Prisma ORM | Microsoft SQL Server + Entity Framework |
-| **Image Hosting** | Cloudinary / AWS S3 API | Local Web Server Storage / IIS |
-| **IDE & Development** | VS Code / WebStorm | Visual Studio 2022 |
-| **Web Server / Host** | Vercel (Frontend) + Render/Railway (Backend) | IIS / IIS Express |
-
-### Rationale for Recommendation (Stack Option A):
-1. **Modern Gallery UI**: React.js provides smooth component rendering, fluid image lightbox modals, and instant filtering without full-page reloads.
-2. **High-Resolution Asset Management**: Integrating Cloudinary or AWS S3 delivers automated image compression and high-speed global CDN delivery for heavy artwork images.
-3. **Developer Velocity & Flexibility**: Node.js/TypeScript with Prisma ORM offers fast iteration, strong typing, and straightforward deployment.
+| **Frontend UI** | React.js / Next.js + Tailwind CSS | **Vercel** (Free Tier Hosting) |
+| **Backend API** | Node.js (Express.js) | **Render** (Free Web Service Tier) |
+| **Database** | **MongoDB** + Mongoose ODM | **MongoDB Atlas** (M0 Free Shared Cluster) |
+| **Image Hosting** | Cloudinary API | Cloudinary Free Tier (25 GB Credit) |
+| **Version Control** | Git + GitHub | GitHub Public Repository |
+| **Containerization** | Docker & Docker Compose | Local Developer Container Stack |
 
 ---
 
-## 6. Conceptual Database Schema (Entity-Relationship Overview)
+## 6. Conceptual MongoDB Document Schema Design
 
 ```mermaid
 erDiagram
     USERS ||--o{ ARTWORKS : creates
     USERS ||--o{ ORDERS : places
     USERS ||--o{ REVIEWS : writes
-    ARTWORKS ||--o{ ORDER_ITEMS : included_in
     ARTWORKS ||--o{ REVIEWS : receives
-    ORDERS ||--o{ ORDER_ITEMS : contains
 
     USERS {
-        uuid id PK
+        ObjectId _id PK
         string name
         string email
         string password_hash
-        enum role "GUEST | CUSTOMER | ARTIST | ADMIN"
-        text bio
+        string role "GUEST | CUSTOMER | ARTIST | ADMIN"
+        string bio
         string contact_phone
-        datetime created_at
+        date createdAt
     }
 
     ARTWORKS {
-        uuid id PK
-        uuid artist_id FK
+        ObjectId _id PK
+        ObjectId artist_id FK
         string title
-        text description
+        string description
         string medium
         string dimensions
-        decimal price
+        number price
         string image_url
-        enum approval_status "PENDING | APPROVED | REJECTED"
-        enum listing_status "AVAILABLE | RESERVED | SOLD"
-        datetime created_at
+        string approval_status "PENDING | APPROVED | REJECTED"
+        string listing_status "AVAILABLE | RESERVED | SOLD"
+        date createdAt
     }
 
     ORDERS {
-        uuid id PK
-        uuid customer_id FK
-        decimal total_amount
+        ObjectId _id PK
+        ObjectId customer_id FK
+        array items "embedded artwork_id, title, price"
+        number total_amount
         string payment_method "CARD | COD"
-        enum payment_status "PENDING | PAID | FAILED"
-        enum order_status "PENDING | PROCESSING | SHIPPED | DELIVERED"
-        text shipping_address
-        datetime created_at
-    }
-
-    ORDER_ITEMS {
-        uuid id PK
-        uuid order_id FK
-        uuid artwork_id FK
-        decimal price
+        string payment_status "PENDING | PAID | FAILED"
+        string order_status "PENDING | PROCESSING | SHIPPED | DELIVERED"
+        string shipping_address
+        date createdAt
     }
 
     REVIEWS {
-        uuid id PK
-        uuid customer_id FK
-        uuid artwork_id FK
-        int rating "1-5 Stars"
-        text comment
-        datetime created_at
+        ObjectId _id PK
+        ObjectId customer_id FK
+        ObjectId artwork_id FK
+        number rating "1-5 Stars"
+        string comment
+        date createdAt
     }
 ```
 
@@ -211,6 +195,6 @@ erDiagram
 
 ## 7. Approval & Sign-Off
 
-- **Document Version**: 1.0.0
+- **Document Version**: 2.0.0
 - **Prepared By**: Aizen (DevOps & Integration Strategist) & Siesta (Project Lead)
 - **Approved For Implementation**: SMT-Project Team

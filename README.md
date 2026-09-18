@@ -1,6 +1,6 @@
 # Arts Gallery Web Application (SMT-Project)
 
-Public repository for the **Arts Gallery Web Application** developed for the Virtual University of Pakistan (VU) Software Engineering project curriculum.
+Public repository for the **Arts Gallery Web Application** developed under the ASE `Brain/Projects/` workspace directory.
 
 ---
 
@@ -16,22 +16,25 @@ The **Arts Gallery Web Application** is an online platform that bridges visual a
 
 ---
 
-## 2. Technology Stack
+## 2. Technology Stack & Zero-Cost Architecture
 
 - **Frontend**: React.js / Next.js, Tailwind CSS, Framer Motion
-- **Backend API**: Node.js (Express.js / NestJS)
-- **Database**: PostgreSQL with Prisma ORM
-- **Media Asset Storage**: Cloudinary / AWS S3 API
+- **Backend API**: Node.js (Express.js)
+- **Database**: MongoDB with Mongoose ODM
+- **Media Asset Storage**: Cloudinary API (Free Tier)
+- **Zero-Cost Deployment**:
+  - **Frontend Hosting**: Vercel (Free Tier)
+  - **Backend API Service**: Render (Free Web Service Tier)
+  - **Database Cluster**: MongoDB Atlas (M0 Free Shared Cluster)
 - **Containerization**: Docker & Docker Compose
 - **CI/CD Pipeline**: GitHub Actions
-- **Supervisor**: Manahil Hassan (`manahil.hassan@vu.edu.pk`)
 
 ---
 
 ## 3. Repository Directory Structure
 
 ```
-SMT-Project/
+Brain/Projects/SMT-Project/
 ├── .github/
 │   └── workflows/
 │       └── ci-cd.yml             # Automated CI/CD build & test pipeline
@@ -40,9 +43,10 @@ SMT-Project/
 ├── docker/
 │   ├── Dockerfile.frontend       # Multi-stage build for React frontend
 │   └── Dockerfile.backend        # Container build for Node.js API server
-├── docker-compose.yml            # Local development orchestration (DB + API + Web)
+├── docker-compose.yml            # Local development orchestration (MongoDB + API + Web)
 ├── .env.example                  # Environment variables template
 ├── .gitignore                    # Git tracking exclusion rules
+├── SRS.md                        # Primary Software Requirements Specification
 └── README.md                     # Project documentation & devops manual
 ```
 
@@ -52,14 +56,14 @@ SMT-Project/
 
 ### Prerequisites
 - Node.js `v18+` or `v20+`
-- PostgreSQL `v15+` or Docker Desktop
+- MongoDB `v6+` or Docker Desktop
 - Git
 
 ### Using Docker Compose (Recommended)
 1. Clone the public repository:
    ```bash
-   git clone https://github.com/your-username/SMT-Project.git
-   cd SMT-Project
+   git clone https://github.com/Xain-Ul-Abedin/SMT-Project.git
+   cd Brain/Projects/SMT-Project
    ```
 2. Create local environment file:
    ```bash
@@ -72,7 +76,7 @@ SMT-Project/
 4. Access services:
    - Frontend UI: `http://localhost:3000`
    - Backend API: `http://localhost:5000/api`
-   - Database: `localhost:5432`
+   - MongoDB: `mongodb://localhost:27017/arts_gallery_db`
 
 ---
 
@@ -82,17 +86,17 @@ This repository utilizes **GitHub Actions** for continuous integration and conti
 
 ```mermaid
 flowchart LR
-    Push["Git Push / PR (main)"] --> Quality["Linting & Type Check"]
+    Push["Git Push / PR (master)"] --> Quality["Linting & Type Check"]
     Quality --> Test["Unit & Integration Tests"]
     Test --> Build["Docker Container Build"]
-    Build --> Deploy["Production Edge Deployment"]
+    Build --> Deploy["Production Edge Deployment (Vercel + Render)"]
 ```
 
 - **Pipeline Stages**:
   - `Lint`: ESLint and Prettier code quality check.
-  - `Test`: Jest unit test suites for API controllers and database models.
+  - `Test`: Jest unit test suites for API controllers and Mongoose models.
   - `Build`: Automated Docker multi-stage image verification.
-  - `Deploy`: Automated deployment trigger upon push to `main` branch.
+  - `Deploy`: Automated deployment triggers for Vercel (Frontend) and Render (Backend).
 
 ---
 
@@ -103,11 +107,12 @@ Create a `.env` file based on `.env.example`:
 ```env
 NODE_ENV=development
 PORT=5000
-DATABASE_URL=postgresql://postgres:postgres@localhost:5432/arts_gallery_db
+MONGODB_URI=mongodb+srv://user:password@cluster.mongodb.net/arts_gallery_db?retryWrites=true&w=majority
 JWT_SECRET=super_secret_jwt_key_arts_gallery
 CLOUDINARY_CLOUD_NAME=your_cloud_name
 CLOUDINARY_API_KEY=your_api_key
 CLOUDINARY_API_SECRET=your_api_secret
+CLIENT_URL=http://localhost:3000
 ```
 
 ---

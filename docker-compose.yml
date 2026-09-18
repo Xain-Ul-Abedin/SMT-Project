@@ -1,18 +1,14 @@
 version: '3.8'
 
 services:
-  postgres:
-    image: postgres:15-alpine
-    container_name: smt_arts_gallery_postgres
+  mongodb:
+    image: mongo:6.0
+    container_name: smt_arts_gallery_mongodb
     restart: always
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres_password
-      POSTGRES_DB: arts_gallery_db
     ports:
-      - "5432:5432"
+      - "27017:27017"
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - mongodb_data:/data/db
 
   backend:
     build:
@@ -23,11 +19,11 @@ services:
     environment:
       NODE_ENV: production
       PORT: 5000
-      DATABASE_URL: postgresql://postgres:postgres_password@postgres:5432/arts_gallery_db?schema=public
+      MONGODB_URI: mongodb://mongodb:27017/arts_gallery_db
     ports:
       - "5000:5000"
     depends_on:
-      - postgres
+      - mongodb
 
   frontend:
     build:
@@ -41,4 +37,4 @@ services:
       - backend
 
 volumes:
-  postgres_data:
+  mongodb_data:
