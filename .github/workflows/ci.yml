@@ -1,0 +1,48 @@
+name: Continuous Integration & Verification
+
+on:
+  push:
+    branches: [ master, main ]
+  pull_request:
+    branches: [ master, main ]
+
+jobs:
+  verify:
+    name: Build & Test Full-Stack Suite
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [20.x, 22.x]
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Install pnpm Package Manager
+        uses: pnpm/action-setup@v3
+        with:
+          version: 10
+
+      - name: Setup Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'pnpm'
+
+      - name: Install Monorepo Dependencies
+        run: pnpm install --frozen-lockfile=false
+
+      - name: Execute Model Invariant Tests
+        run: pnpm --filter @smt/api test
+
+      - name: Execute Core REST API Integration Tests
+        run: pnpm --filter @smt/api test:api
+
+      - name: Execute Full-Stack E2E Multi-Tenant Tests
+        run: pnpm --filter @smt/api test:e2e
+
+      - name: Verify Next.js 15 Production Build
+        run: pnpm --filter @smt/web build
+        env:
+          NEXT_PUBLIC_API_URL: http://localhost:5000/api/v1

@@ -27,6 +27,7 @@ import { CartDrawer } from '@/components/CartDrawer';
 import { CheckoutModal } from '@/components/CheckoutModal';
 import { OrderTrackerModal } from '@/components/OrderTrackerModal';
 import { ArtistSubmissionModal } from '@/components/ArtistSubmissionModal';
+import { CollectorCollectionModal } from '@/components/CollectorCollectionModal';
 import { useAuth } from '@/context/AuthContext';
 import { useCart } from '@/context/CartContext';
 import { 
@@ -63,6 +64,7 @@ export default function HomePage() {
   const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
   const [activeOrder, setActiveOrder] = useState<Order | null>(null);
   const [isArtistStudioOpen, setIsArtistStudioOpen] = useState(false);
+  const [isCollectionOpen, setIsCollectionOpen] = useState(false);
 
   // Initial Telemetry & Catalog Load
   const fetchCatalog = async () => {
@@ -109,6 +111,7 @@ export default function HomePage() {
         searchQuery={searchQuery}
         onSearchChange={setSearchQuery}
         onOpenArtistStudio={() => setIsArtistStudioOpen(true)}
+        onOpenCollection={() => setIsCollectionOpen(true)}
       />
 
       {/* Main Exhibition Salon */}
@@ -351,6 +354,11 @@ export default function HomePage() {
         isOpen={isArtistStudioOpen}
         onClose={() => setIsArtistStudioOpen(false)}
         onSubmissionSuccess={handleSubmissionSuccess}
+      />
+
+      <CollectorCollectionModal
+        isOpen={isCollectionOpen}
+        onClose={() => setIsCollectionOpen(false)}
       />
 
     </div>

@@ -216,8 +216,26 @@ async function runApiIntegrationTests() {
         assert.strictEqual(artSoldCheck.data.data.status, 'SOLD', 'Artwork must transition to SOLD upon delivery');
         console.log('[PASS] Order fulfillment completed: Shipping marked [DELIVERED], artwork permanently marked [SOLD].\n');
 
+        // ----------------------------------------------------
+        // TEST 7: Verified Collector Review & Rating Submission
+        // ----------------------------------------------------
+        console.log('[TEST 7: Collector Review & Rating Pipeline]');
+        const reviewRes = await makeRequest('POST', '/reviews', {
+            artworkId: 'ART-001',
+            rating: 5,
+            comment: 'Exceptional museum glaze and profound architectural presence.'
+        }, collectorToken);
+        assert.strictEqual(reviewRes.status, 201);
+        assert.strictEqual(reviewRes.data.data.rating, 5);
+        console.log('[PASS] Verified review submitted successfully.');
+
+        const getReviews = await makeRequest('GET', '/reviews/artwork/ART-001');
+        assert.strictEqual(getReviews.status, 200);
+        assert(getReviews.data.count >= 1, 'Review count must be at least 1');
+        console.log(`[PASS] Artwork reviews stream verified (${getReviews.data.count} review retrieved).\n`);
+
         console.log('==================================================');
-        console.log('[PASS] All Phase 3 REST API Integration Tests Succeeded (100% Green)');
+        console.log('[PASS] All Core REST API Integration Tests Succeeded (100% Green)');
         console.log('==================================================');
 
     } finally {

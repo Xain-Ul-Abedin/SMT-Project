@@ -498,3 +498,60 @@ export const ordersApi = {
     return data;
   },
 };
+
+// ----------------------------------------------------
+// Reviews API (Collector Ratings & Feedback)
+// ----------------------------------------------------
+export interface Review {
+  id: string;
+  customer: string;
+  customerName: string;
+  artwork: string;
+  artworkId: string;
+  rating: number;
+  comment: string;
+  isVerifiedPurchase: boolean;
+  createdAt?: string;
+}
+
+export const reviewsApi = {
+  async createReview(
+    payload: { artworkId: string; rating: number; comment: string },
+    token: string
+  ): Promise<{ success: boolean; data: Review; message: string }> {
+    const res = await fetch(`${API_BASE_URL}/reviews`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(payload),
+    });
+    const data = await res.json();
+    if (!res.ok) {
+      throw new Error(data.message || data.error || 'Failed to submit review');
+    }
+    return data;
+  },
+
+  async getReviewsByArtwork(artworkId: string): Promise<{ success: boolean; data: Review[]; count: number }> {
+    try {
+      const res = await fetch(`${API_BASE_URL}/reviews/artwork/${artworkId}`, { cache: 'no-store' });
+      if (!res.ok) throw new Error('Failed to fetch reviews');
+      return await res.json();
+    } catch (e) {
+      return { success: true, data: [], count: 0 };
+    }
+  },
+
+  async getAllReviews(): Promise<{ success: boolean; data: Review[]; count: number }> {
+    try {
+      const res = await fetch(`${API_BASE_URL}/reviews`, { cache: 'no-store' });
+      if (!res.ok) throw new Error('Failed to fetch reviews');
+      return await res.json();
+    } catch (e) {
+      return { success: true, data: [], count: 0 };
+    }
+  },
+};
+

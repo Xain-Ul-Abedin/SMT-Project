@@ -10,6 +10,7 @@ const authRoutes = require('./routes/authRoutes');
 const artworkRoutes = require('./routes/artworkRoutes');
 const curationRoutes = require('./routes/curationRoutes');
 const orderRoutes = require('./routes/orderRoutes');
+const reviewRoutes = require('./routes/reviewRoutes');
 
 const { notFound, errorHandler } = require('./middleware/errorMiddleware');
 
@@ -37,7 +38,8 @@ app.get('/', (req, res) => {
             auth: '/api/v1/auth',
             artworks: '/api/v1/artworks',
             curation: '/api/v1/curation',
-            orders: '/api/v1/orders'
+            orders: '/api/v1/orders',
+            reviews: '/api/v1/reviews'
         }
     });
 });
@@ -48,6 +50,7 @@ app.use('/api/v1/auth', authRoutes);
 app.use('/api/v1/artworks', artworkRoutes);
 app.use('/api/v1/curation', curationRoutes);
 app.use('/api/v1/orders', orderRoutes);
+app.use('/api/v1/reviews', reviewRoutes);
 
 // Error Handling Middleware
 app.use(notFound);

@@ -13,7 +13,8 @@ import {
   ChevronDown,
   LogOut,
   ExternalLink,
-  Sparkles
+  Sparkles,
+  Award
 } from 'lucide-react';
 import { PillButton } from '@/components/ui/PillButton';
 import { useAuth } from '@/context/AuthContext';
@@ -24,6 +25,7 @@ interface NavbarProps {
   onSearchChange?: (query: string) => void;
   onOpenAdminWorkbench?: () => void;
   onOpenArtistStudio?: () => void;
+  onOpenCollection?: () => void;
 }
 
 export function Navbar({
@@ -31,6 +33,7 @@ export function Navbar({
   onSearchChange,
   onOpenAdminWorkbench,
   onOpenArtistStudio,
+  onOpenCollection,
 }: NavbarProps) {
   const { user, isAdmin, isArtist, switchDemoUser, logout } = useAuth();
   const { itemCount, openCart } = useCart();
@@ -94,6 +97,15 @@ export function Navbar({
               <span>Submit Piece</span>
             </button>
           )}
+
+          {/* Collector Vault & Reviews Trigger */}
+          <button
+            onClick={onOpenCollection}
+            className="hidden sm:inline-flex rounded-full items-center gap-1.5 px-3.5 py-1.5 text-xs font-medium border border-gallery-border hover:border-gallery-charcoal text-gallery-charcoal bg-white transition-all shadow-xs"
+          >
+            <Award className="w-3.5 h-3.5 text-gallery-gold" />
+            <span>Vault & COA</span>
+          </button>
 
           {/* Multi-Tenant Demo Persona Switcher Pill */}
           <div className="relative">
