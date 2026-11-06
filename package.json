@@ -1,0 +1,22 @@
+{
+  "name": "smt-arts-gallery",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Arts Gallery Web Application - Monorepo Root",
+  "workspaces": [
+    "apps/*"
+  ],
+  "scripts": {
+    "dev": "concurrently \"npm run dev:api\" \"npm run dev:web\"",
+    "dev:api": "npm run dev --prefix apps/api",
+    "dev:web": "npm run dev --prefix apps/web",
+    "build": "npm run build --prefix apps/web",
+    "build:api": "npm run build --prefix apps/api",
+    "start:api": "npm start --prefix apps/api",
+    "start:web": "npm start --prefix apps/web",
+    "test": "npm test --prefix apps/api"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2"
+  }
+}

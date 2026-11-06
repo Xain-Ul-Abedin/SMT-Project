@@ -1,0 +1,44 @@
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Lexend:wght@300;400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --font-cormorant: 'Cormorant Garamond', Georgia, serif;
+  --font-lexend: 'Lexend', sans-serif;
+  --background: #FAF9F6;
+  --foreground: #1E293B;
+}
+
+.dark {
+  --background: #0B0F17;
+  --foreground: #F8FAFC;
+}
+
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-lexend);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Luxury Heading Typography */
+h1, h2, h3, h4, .font-editorial {
+  font-family: var(--font-cormorant);
+}
+
+/* Material You 50% Radius Capsule Invariant */
+.btn-capsule {
+  border-radius: 9999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.btn-capsule:active {
+  transform: scale(0.97);
+}
